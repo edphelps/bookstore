@@ -25,13 +25,56 @@ const Foot = () => (
 const SearchBar = ({searchState}) => {
 
   const onChange = (e) => {
-    console.log("search change");
+    console.log("SearchBar::onChange()");
     e.preventDefault();
   }
   const onSubmit = (e) => {
-    console.log("onSubmit()");
+    console.log("SearchBar::onSubmit() -- do nothing");
     e.preventDefault();
   }
+
+  return (
+  <div>
+    <div id="search-bar" className="navbar bg-secondary text-light">
+      <form id="myform" onSubmit={onSubmit}>
+         <div className="input-group input-group-sm">
+
+           {/*seach box*/}
+          <button className="btn btn-sm btn-info" type="button">Reset</button>
+          &nbsp;&nbsp;
+          <input id="search-text" type="text" className="form-control" placeholder="search..."/>
+
+          {/*author or title radio buttons*/}
+          &nbsp;&nbsp;
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
+            <label className="btn btn-info btn-sm active">
+              <input type="radio" name="search-rbtns" id="author-rbtn" value="author" autoComplete="off" checked />
+              <label className="form-check-label" htmlFor="author-rbtn">author</label>
+            </label>
+            <label className="btn btn-info btn-sm">
+              <input type="radio" name="search-rbtns" id="title-rbtn" value="title" autoComplete="off" />
+              <label className="form-check-label" htmlFor="title-rbtn">title</label>
+            </label>
+            <label className="btn btn-info btn-sm">
+              <input type="radio" name="search-rbtns" id="desc-rbtn" value="description" autoComplete="off" />
+              <label className="form-check-label" htmlFor="title-rbtn">description</label>
+            </label>
+          </div>
+
+          {/*<div className="form-check form-check-inline">
+            <input className="form-check-input" type="radio" name="search-rbtn" id="author-rbtn" value="author-rbtn" />
+            <label className="form-check-label" htmlFor="author-rbtn">author</label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input className="form-check-input" type="radio" name="search-rbtn" id="title-rbtn" value="title-rbtn" />
+            <label className="form-check-label" htmlFor="title-rbtn">title</label>
+          </div>*/}
+
+         </div> {/*input-group*/}
+       </form>
+    </div>
+  </div>
+);
 
   return (
     <div>
