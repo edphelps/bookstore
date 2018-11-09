@@ -33,16 +33,18 @@ function formatDollars(dollars) {
 const BookRow = ({ book }) => {
 
   /* **********************************
-  *  onclickBookList()
+  *  onclickBook()
   *  Expands the information on the book and adds a Buy button
   ************************************* */
-  const onclickBookList = (e) => {
+  const onclickBook = (e) => {
     console.log("BookRow::onClickBookList(), id: ", e.target.dataset.id);
-    e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
+    const sElemId = "book_list_id_"+book.id;
+    document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+    // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
   }
 
   return (
-    <div className="list-group-item" data-id={book.id} onClick={onclickBookList}>
+    <div className="list-group-item" id={"book_list_id_"+book.id}  data-id={book.id} onClick={onclickBook}>
       <div className="row">
         <div className="col">
           <div className="book-title">{book.title}</div>
@@ -59,8 +61,8 @@ const BookRow = ({ book }) => {
 const BookRowExpanded = ({ book }) => (
     <div className="row">
       <div className="col" data-id={book.id}>
-        <button type="button">add to cart</button> {formatDollars(book.price)}<br />
         <div className="book-title">{book.title}</div>
+        <button type="button">add to cart</button> {formatDollars(book.price)}<br />
         <span className="book-list-heading">Subtitle:</span> ( {book.subtitle} )<br />
         <span className="book-list-heading">Author:</span> {book.author}<br />
         <span className="book-list-heading">Decription:</span> {book.description}<br />
