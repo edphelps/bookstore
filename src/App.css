@@ -1,4 +1,6 @@
 
+/* the list of books on the left,
+   limit size and make it scrolling */
 .list-group{
   max-height: 2000px;
   /* max-height: 300px; */
@@ -7,22 +9,30 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.book-list-heading {
-  font-weight: bold;
+.expanded {
+  background-color: #D5D8DC;
 }
 
-
+/* book title when not expanded */
 .book-title {
   font-size: 22px;
   margin-top: 6px;
   margin-bottom: 0;
 }
 
+/* book title in expanded section */
 .expanded-title {
   font-size: 22px;
   margin-top: 6px;
   margin-bottom: 4px;
 }
+
+/* para in expanded section */
 .expanded-para {
   margin-top: 4px;
+}
+
+/* leadin headings for expamded book */
+.book-list-heading {
+  font-weight: bold;
 }

@@ -28,16 +28,18 @@ function formatDollars(dollars) {
 }
 
 /* ********************************************
-*  Book row, unexpanded
+*  Book row container, manages clicking on un/expanded book
 *********************************************** */
-const BookRow = ({ book }) => {
+const BookRowContainer = ({ book }) => {
 
   /* **********************************
   *  onclickBook()
   *  Expands the information on the book and adds a Buy button
   ************************************* */
   const onclickBook = (e) => {
-    console.log("BookRow::onClickBookList(), id: ", e.target.dataset.id);
+    console.log("BookRow::onClickBookList(), id: ", book.id);
+    console.log("e.target: ", e.target);
+
     const sElemId = "book_list_id_"+book.id;
     if (book.isExpanded) {
       book.isExpanded = false;
@@ -49,36 +51,80 @@ const BookRow = ({ book }) => {
     }
     // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
   }
-
+  /* **********************************
+  *  render()
+  ************************************* */
   return (
     <div className="list-group-item" id={"book_list_id_"+book.id}  data-id={book.id} onClick={onclickBook}>
-      <div className="row">
-        <div className="col">
-          <div className="book-title">{book.title}</div>
-          {book.author}
-        </div>
-      </div>
+      <BookRowExpanded book={book} />
     </div>
     )
 };
 
 /* ********************************************
+*  Book row, unexpanded
+*********************************************** */
+const BookRow = ({ book }) => (
+  <div className="row">
+    <div className="col">
+      <div className="book-title">{book.title}</div>
+      {book.author}
+    </div>
+  </div>
+);
+
+/* ********************************************
 *  Book row, expanded
 *********************************************** */
-const BookRowExpanded = ({ book }) => (
+const BookRowExpanded = ({ book }) => {
+
+  /* **********************************
+  *  onclickAddToCart()
+  ************************************* */
+  const onclickAddToCart = (e) => {
+    console.log("---- BookRowExpanded::onclickAddToCart()");
+    // console.log("BookRowExpanded::onclickAddToCart(), id: ", e.target.dataset.id);
+    // const sElemId = "book_list_id_"+book.id;
+    // if (book.isExpanded) {
+    //   book.isExpanded = false;
+    //   document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
+    // }
+    // else {
+    //   book.isExpanded = true;
+    //   document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+    // }
+    // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
+  }
+
+  return (
     <div className="row">
-      <div className="col" data-id={book.id}>
+      <div className="col expanded" data-id={book.id}>
         <div className="expanded-title">{book.title}</div>
-        <div className="expanded-para"><button type="button">add to cart</button> {formatDollars(book.price)}</div>
-        <div className="expanded-para"><span className="book-list-heading">Subtitle:</span>{book.subtitle}</div>
+        <div className="expanded-para">
+          <button className="btn btn-success btn-sm"
+            onClick={onclickAddToCart}
+            type="button">
+            <i className="fas fa-cart-plus"></i>&nbsp;
+            add to cart
+           </button>&nbsp;
+          {formatDollars(book.price)}
+        </div>
         <div className="expanded-para"><span className="book-list-heading">Author:</span> {book.author}</div>
+        <div className="expanded-para"><span className="book-list-heading">Subtitle:</span> {book.subtitle}</div>
         <div className="expanded-para"><span className="book-list-heading">Decription:</span> {book.description}</div>
-        <div className="expanded-para"><span className="book-list-heading">Publication:</span> {book.publisher} {book.published}</div>
-        <div className="expanded-para"><span className="book-list-heading">Pages:</span> {book.pages} {book.published}</div>
+        <div className="expanded-para">
+          <span className="book-list-heading">
+            Publication:
+          </span>&nbsp;
+          {new Date(book.published).toLocaleString('en-US',{ year: '2-digit', month: '2-digit', day: '2-digit' })},&nbsp;
+          {book.pages} pages,&nbsp;
+          {book.publisher}
+          </div>
         <div className="expanded-para"><a target="_blank" href={book.website}>website</a></div>
         </div>
     </div>
-);
+  );
+};
 
 /* ********************************************
 *  BookList
@@ -88,27 +134,6 @@ const BookRowExpanded = ({ book }) => (
 }
 *********************************************** */
 const BookList = ({books, searchCriteria}) => {
-
-  // /* **********************************
-  // *  onclickBookList()
-  // *  Expands the information on the book and adds a Buy button
-  // ************************************* */
-  // const onclickBookList = (e) => {
-  //   console.log("BookList::onClickBookList(), id: ", e.target.dataset.id);
-  //
-  //   // check if user clicked the list heading or a line, do nothing
-  //   if (!e.target.dataset.id)
-  //     return;
-  //
-  //   // find book
-  //   const book = books.find((book) => book.id == e.target.dataset.id);
-  //
-  //   if (!book) {
-  //     console.log("ERROR couldn't find book: ", e.target.dataset.id);
-  //     return;
-  //   }
-  //   e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
-  // }
 
   /* **********************************
   *  render()
@@ -159,12 +184,11 @@ const BookList = ({books, searchCriteria}) => {
   }
 
   // render
-  // {/*<div className="container" onClick={onclickBookList}>*/}
   return (
     <div className="container">
-      <h1>Books!</h1>
+      <h2>Select a title below</h2>
       <div className="list-group">
-        { filteredBooks.map(book => <BookRow key={book.id} book={book} />) }
+        { filteredBooks.map(book => <BookRowContainer key={book.id} book={book} />) }
       </div>
     </div>
   )
@@ -327,6 +351,7 @@ class App extends Component {
       <div>
         <Nav />
         <SearchBar searchCriteria={searchCriteria} onChangeCB={this.searchCriteriaChanged} />
+
         <BookList books={books} searchCriteria={searchCriteria} />
         <Foot />
       </div>
