@@ -27,7 +27,7 @@ function formatDollars(dollars) {
 }
 
 /* ********************************************
-*  Book row, unexpanded
+*  Book row, compressed
 *********************************************** */
 const BookRow = ({ book }) => (
   <div className="row">
@@ -41,7 +41,7 @@ const BookRow = ({ book }) => (
 /* ********************************************
 *  Book row, expanded
 *********************************************** */
-const BookRowExpanded = ({ book }) => {
+const BookRowExpanded = ({ book, addToCartCB }) => {
 
   /* **********************************
   *  onclickAddToCart()
@@ -49,6 +49,7 @@ const BookRowExpanded = ({ book }) => {
   const onclickAddToCart = (e) => {
     console.log('---- BookRowExpanded::onclickAddToCart()');
     e.stopPropagation();
+    addToCartCB(book.id);
   };
 
   /* **********************************
@@ -63,7 +64,9 @@ const BookRowExpanded = ({ book }) => {
             <i className="fas fa-cart-plus" />
             &nbsp;add to cart
           </button>
-           &nbsp;
+          &nbsp;&nbsp;
+          <span className="book-list-heading">Price:</span>
+          &nbsp;&nbsp;
           {formatDollars(book.price)}
         </div>
         <div className="expanded-para">
@@ -90,7 +93,7 @@ const BookRowExpanded = ({ book }) => {
           &nbsp;pages,&nbsp;
           {book.publisher}
         </div>
-        <div className="expanded-para"><a target="_blank" href={book.website}>website</a></div>
+        <div className="expanded-para mb-2"><a target="_blank" href={book.website}>website</a></div>
       </div>
     </div>
   );
@@ -132,6 +135,7 @@ class BookRowContainer extends Component {
     const { isExpanded } = this.state;
     const { book } = this.props;
     const { id } = book;
+    const { addToCartCB } = this.props;
     return (
       <div
         className="list-group-item"
@@ -140,7 +144,7 @@ class BookRowContainer extends Component {
         onClick={this.onclick}
       >
         {isExpanded ? (
-          <BookRowExpanded book={book} />
+          <BookRowExpanded book={book} addToCartCB={addToCartCB} />
         ) : (
           <BookRow book={book} />
         )}
@@ -154,9 +158,11 @@ class BookRowContainer extends Component {
    Displays list of books that match the search criteria and aren't in the cart
    books -- see App state
    searchCriteria -- see App state
+   addToCartCB -- callback when user clicks to add book to cart, pass the book__id
 }
 *********************************************** */
-const BookList = ({ books, searchCriteria }) => {
+const BookList = ({ books, searchCriteria, addToCartCB }) => {
+
   /* **********************************
   *  render()
   ************************************* */
@@ -167,15 +173,6 @@ const BookList = ({ books, searchCriteria }) => {
     return (
       <div className="container">
         <h1>Loading book list...</h1>
-      </div>
-    );
-  }
-
-  // short circuit: no books
-  if (!books.length) {
-    return (
-      <div className="container">
-        <h1>You bought the store!</h1>
       </div>
     );
   }
@@ -199,6 +196,15 @@ const BookList = ({ books, searchCriteria }) => {
     // filter out books already in the cart
     filteredBooks = filteredBooks.filter(book => !book.inCart);
 
+    // short circuit: no books to display
+    if (!filteredBooks.length) {
+      return (
+        <div className="container">
+          <h2>You bought the store!</h2>
+        </div>
+      );
+    }
+
     // sort by title
     filteredBooks.sort((a, b) => {
       if (a.title < b.title) return -1;
@@ -212,7 +218,7 @@ const BookList = ({ books, searchCriteria }) => {
     <div className="container">
       <h2>Select a title below</h2>
       <div className="list-group">
-        { filteredBooks.map(book => <BookRowContainer key={book.id} book={book} />) }
+        { filteredBooks.map(book => <BookRowContainer key={book.id} book={book} addToCartCB={addToCartCB} />) }
       </div>
     </div>
   );
@@ -304,7 +310,9 @@ class App extends Component {
       text: '',
       authorOrTitle: 'author', // "title"
     },
+    // ----------------
     // DON'T DELETE!!!!
+    // ----------------
     // The following is loaded in compomnentDidMount
     // books: [ {
     //     "author": "Glenn Block, et al.",
@@ -339,8 +347,26 @@ class App extends Component {
     this.setState(() => ({
       searchCriteria,
     }));
-    // log will lag one keystroke behind b/c of the async call above
-    // console.log("App:searchCriteriaChanged(): ",this.state.searchCriteria);
+  }
+
+  /* **********************************
+  *  addToCart()
+  *  Called when user clicks the add to cart button on a book
+  *  id -- book id
+  ************************************* */
+  addToCart = async (id) => {
+    console.log('App:addToCart()');
+    const response = await fetch(`http://localhost:8082/api/books/cart/add/${id}`, {
+      method: 'PATCH',
+      body: '',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    const json = await response.json();
+    console.log('resulting json: ' + json);
+    this.loadBooks();
   }
 
   /* **********************************
@@ -366,8 +392,7 @@ class App extends Component {
       <div>
         <Nav />
         <SearchBar searchCriteria={searchCriteria} onChangeCB={this.searchCriteriaChanged} />
-
-        <BookList books={books} searchCriteria={searchCriteria} />
+        <BookList books={books} searchCriteria={searchCriteria} addToCartCB={this.addToCart} />
         <Foot />
       </div>
     );
