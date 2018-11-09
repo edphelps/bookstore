@@ -69,13 +69,13 @@ const BookRowExpanded = ({ book }) => (
     <div className="row">
       <div className="col" data-id={book.id}>
         <div className="book-title">{book.title}</div>
-        <button type="button">add to cart</button> {formatDollars(book.price)}<br />
-        <span className="book-list-heading">Subtitle:</span> ( {book.subtitle} )<br />
-        <span className="book-list-heading">Author:</span> {book.author}<br />
-        <span className="book-list-heading">Decription:</span> {book.description}<br />
-        <span className="book-list-heading">Publication:</span> {book.publisher} {book.published}<br />
-        <span className="book-list-heading">Pages:</span> {book.pages} {book.published}<br />
-        <a target="_blank" href={book.website}>website</a><br />
+        <div className="expanded-para"><button type="button">add to cart</button> {formatDollars(book.price)}</div>
+        <div className="expanded-para"><span className="book-list-heading">Subtitle:</span>{book.subtitle}</div>
+        <div className="expanded-para"><span className="book-list-heading">Author:</span> {book.author}</div>
+        <div className="expanded-para"><span className="book-list-heading">Decription:</span> {book.description}</div>
+        <div className="expanded-para"><span className="book-list-heading">Publication:</span> {book.publisher} {book.published}</div>
+        <div className="expanded-para"><span className="book-list-heading">Pages:</span> {book.pages} {book.published}</div>
+        <div className="expanded-para"><a target="_blank" href={book.website}>website</a></div>
         </div>
     </div>
 );
