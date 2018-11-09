@@ -32,23 +32,30 @@ function formatDollars(dollars) {
 const BookRow = ({ book }) => (
   <div className="list-group-item">
     <div className="row">
-      <div className="col-2">
-        {formatDollars(book.price)}
-      </div>
-      <div className="col">{book.title}<br />{book.author}</div>
+      <div className="col" data-id={book.id}>{book.title}<br />{book.author}</div>
     </div>
   </div>
 );
 
-
 /* ********************************************
 *  BookList
-   Displays list of books that match the search criteria and aren't in cart
+   Displays list of books that match the search criteria and aren't in the cart
    books -- see App state
    searchCriteria -- see App state
 }
 *********************************************** */
 const BookList = ({books, searchCriteria}) => {
+
+  const onclickBookList = (e) => {
+    console.log("BookList::onClickBookList(), id: ", e.target.dataset.id);
+
+    // check if user clicked the list heading, do nothing
+    if (!e.target.dataset.id)
+      return;
+
+    
+  }
+
   console.log("BookList::render(), books: ", books);
   if (!books) {
     return (
@@ -85,12 +92,11 @@ const BookList = ({books, searchCriteria}) => {
   }
 
   return (
-    <div className="container">
+    <div className="container" onClick={onclickBookList}>
       <h1>Books!</h1>
       <div className="list-group">
         <div className="list-group-item">
           <div className="row">
-            <div className="col-2"><b>cart</b></div>
             <div className="col"><b>book</b></div>
           </div>
         </div>
@@ -104,10 +110,7 @@ const BookList = ({books, searchCriteria}) => {
 /* ********************************************
 *  SearchBar
    Displays search bar at top and notifies parent of any change
-     searchState -- {
-        text: "phelps",
-        authorOrTitle: "author" / "title"
-      }
+     searchState -- see App state
      onChangeCB -- parent callback when content changes, passing
        { text: "xx", authorOrTitle: "author" / "title" }
 }
@@ -200,6 +203,7 @@ class App extends Component {
       text: "",
       authorOrTitle: "author" // "title"
     },
+    // Loaded in compomnentDidMount
     // books: [ {
     //     "author": "Glenn Block, et al.",
     //     "description": "Design and build Web APIs for a broad range of clients—including browsers and mobile devices—that can adapt to change over time. This practical, hands-on guide takes you through the theory and tools you need to build evolvable HTTP services with Microsoft’s ASP.NET Web API framework. In the process, you’ll learn how design and implement a real-world Web API.",
