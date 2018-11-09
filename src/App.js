@@ -21,128 +21,120 @@ const Foot = () => (
 
 /* ********************************************
 *  SearchBar
+   Displays search bar at top and notifies parent of any change
+     searchState -- {
+        text: "phelps",
+        authorOrTitle: "author" / "title"
+      }
+     onChangeCB -- parent callback when content changes, passing
+       { text: "xx", authorOrTitle: "author" / "title" }
+}
 *********************************************** */
-const SearchBar = ({searchState}) => {
+const SearchBar = ({searchCriteria, onChangeCB}) => {
 
-  const onChange = (e) => {
+  const onChange = () => {
+    // console.log("-----------------");
     console.log("SearchBar::onChange()");
-    e.preventDefault();
+    // console.log("search for: ", document.forms.searchForm.searchText.value);
+    // console.log("search in: ", document.forms.searchForm.searchRBtns.value);
+    onChangeCB({
+      text: document.forms.searchForm.searchText.value,
+      authorOrTitle: document.forms.searchForm.searchRBtns.value,
+    });
+    // e.preventDefault();
   }
   const onSubmit = (e) => {
     console.log("SearchBar::onSubmit() -- do nothing");
     e.preventDefault();
   }
+  const onReset = () => {
+    document.forms.searchForm.searchText.value = "";
+    document.getElementById("titleRBtn").checked = false;
+    document.getElementById("authorRBtn").checked = true;
+    onChange();
+    // Can't change the radio buttons b/c I'd have to make a jQuery call on the button and I
+    //  don't know how to do that.
+    // document.forms.searchForm.authorRBtn.checked = true;
+    // console.log("rb value A: ", document.forms.searchForm.searchRBtns.value);
+    // document.getElementById("descRBtn").checked = false;
+    // document.getElementById("titleRBtn").checked = false;
+    // document.getElementById("authorRBtn").checked = true;
+    // console.log("rb value B: ", document.forms.searchForm.searchRBtns.value);
+  }
 
-  return (
-  <div>
-    <div id="search-bar" className="navbar bg-secondary text-light">
-      <form id="myform" onSubmit={onSubmit}>
-         <div className="input-group input-group-sm">
-
-           {/*seach box*/}
-          <button className="btn btn-sm btn-info" type="button">Reset</button>
-          &nbsp;&nbsp;
-          <input id="search-text" type="text" className="form-control" placeholder="search..."/>
-
-          {/*author or title radio buttons*/}
-          &nbsp;&nbsp;
-          <div className="btn-group btn-group-toggle" data-toggle="buttons">
-            <label className="btn btn-info btn-sm active">
-              <input type="radio" name="search-rbtns" id="author-rbtn" value="author" autoComplete="off" checked />
-              <label className="form-check-label" htmlFor="author-rbtn">author</label>
-            </label>
-            <label className="btn btn-info btn-sm">
-              <input type="radio" name="search-rbtns" id="title-rbtn" value="title" autoComplete="off" />
-              <label className="form-check-label" htmlFor="title-rbtn">title</label>
-            </label>
-            <label className="btn btn-info btn-sm">
-              <input type="radio" name="search-rbtns" id="desc-rbtn" value="description" autoComplete="off" />
-              <label className="form-check-label" htmlFor="title-rbtn">description</label>
-            </label>
-          </div>
-
-          {/*<div className="form-check form-check-inline">
-            <input className="form-check-input" type="radio" name="search-rbtn" id="author-rbtn" value="author-rbtn" />
-            <label className="form-check-label" htmlFor="author-rbtn">author</label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input className="form-check-input" type="radio" name="search-rbtn" id="title-rbtn" value="title-rbtn" />
-            <label className="form-check-label" htmlFor="title-rbtn">title</label>
-          </div>*/}
-
-         </div> {/*input-group*/}
-       </form>
-    </div>
-  </div>
-);
-
+  console.log("SearchBar::render()");
   return (
     <div>
       <div id="search-bar" className="navbar bg-secondary text-light">
-        {/*<form onSubmit={this.onSubmit}>*/}
-        <form id="myform" onSubmit={onSubmit}>
+        <form id="searchForm" onSubmit={onSubmit}>
+           <div className="input-group input-group-sm">
 
-          <div className="input-group input-group-sm">
-
-            <button className="btn btn-sm btn-info" type="button">Reset</button>
+             {/*search box*/}
+            <button className="btn btn-sm btn-info" type="button" onClick={onReset}>Reset</button>
             &nbsp;&nbsp;
-            {/*search box*/}
-            {/*<div className="input-group-prepend">
-              <span className="input-group-text" id="search-btn">Search:</span>
-            </div>*/}
-            <input id="search-text" type="text" className="form-control" placeholder="search"/>
+            <input id="searchText" onChange={onChange} type="text" className="form-control" value={searchCriteria.text} placeholder="search..." />
 
-            {/* author/title radio buttons */}
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            {/*<div className="form-check form-check-inline">
-              <input className="form-check-input" type="radio" name="search-rbtn" id="author-rbtn" value="author-rbtn" />
-              <label className="form-check-label" htmlFor="author-rbtn">author</label>
+            {/*author or title radio buttons*/}
+            &nbsp;&nbsp;&nbsp;
+            <div className="form-check form-check-inline">
+              <input className="form-check-input" onChange={onChange} checked={searchCriteria.authorOrTitle==='author'} type="radio" name="searchRBtns" id="authorRBtn" value="author" />
+              <label className="form-check-label" htmlFor="authorRBtn">author</label>
             </div>
             <div className="form-check form-check-inline">
-              <input className="form-check-input" type="radio" name="search-rbtn" id="title-rbtn" value="title-rbtn" />
-              <label className="form-check-label" htmlFor="title-rbtn">title</label>
-            </div>*/}
-
-            <div className="btn-group btn-group-toggle" data-toggle="buttons">
-              <label className="btn btn-outline-primary active">
-                <input type="radio" name="search-rbtns" id="author-rbtn" value="author" autoComplete="off" checked />
-                <label className="form-check-label" htmlFor="author-rbtn">author</label>
-              </label>
-              <label className="btn btn-outline-primary">
-                <input type="radio" name="search-rbtns" id="title-rbtn" value="author" autoComplete="off" />
-                <label className="form-check-label" htmlFor="title-rbtn">title</label>
-              </label>
-              {/*<label className="btn btn-secondary active">
-                <input type="radio" name="search-rbtns" id="author-rbtn" autoComplete="off" checked>author</input>
-              </label>
-              <label className="btn btn-secondary">
-                <input type="radio" name="search-rbtns" id="title-rbtn" autoComplete="off">title</input>
-              </label>*/}
+              <input className="form-check-input" onChange={onChange} checked={searchCriteria.authorOrTitle==='title'} type="radio" name="searchRBtns" id="titleRBtn" value="title" />
+              <label className="form-check-label" htmlFor="titleRBtn">title</label>
             </div>
 
-          </div> {/*input-group*/}
+            {/*WHY CAN'T I CAPTURE THE ONLCICK?*/}
+            {/*<div className="btn-group btn-group-toggle" data-toggle="buttons">
+              <label className="btn btn-info btn-sm active">
+                <input type="radio" onClick={onChange} name="searchRBtns" id="authorRBtn" value="author" autoComplete="off" checked />
+                author
+              </label>
+              <label className="btn btn-info btn-sm">
+                <input type="radio" onClick={onChange} name="searchRBtns" id="titleRBtn" value="title" autoComplete="off" />
+                title
+              </label>
+              <label className="btn btn-info btn-sm">
+                <input type="radio" onClick={onChange} name="searchRBtns" id="descRBtn" value="description" autoComplete="off" />
+                description
+              </label>
+            </div>*/}
 
-        </form>
+           </div> {/*input-group*/}
+         </form>
       </div>
     </div>
   );
 };
 
+/* *************************************************
+*
+**************************************************** */
 class App extends Component {
 
   state = {
-    search: {
-      text: "ed",
+    searchCriteria: {
+      text: "ed phelps",
       authorOrTitle: "author"
     },
   }
 
+  searchCriteriaChanged = (searchCriteria) => {
+    this.setState((prevState) => ({
+      searchCriteria: searchCriteria,
+    }))
+    // log will lag one keystroke behind b/c of the async call above
+    // console.log("App:searchCriteriaChanged(): ",this.state.searchCriteria);
+  }
+
   render() {
-    const { search } = this.state;
+    console.log("App:render()");
+    const { searchCriteria } = this.state;
     return (
       <div>
         <Nav />
-        <SearchBar searchState={search} />
+        <SearchBar searchCriteria={searchCriteria} onChangeCB={this.searchCriteriaChanged} />
         <p>content</p>
         <Foot />
       </div>
