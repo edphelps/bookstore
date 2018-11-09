@@ -1,7 +1,22 @@
 
 .list-group{
-    max-height: 300px;
-    margin-bottom: 10px;
-    overflow:scroll;
-    -webkit-overflow-scrolling: touch;
+  max-height: 300px;
+  margin-bottom: 10px;
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.book-list-heading {
+  font-weight: bold;
+}
+
+h4 {
+  padding-bottom: 0;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+h5 {
+  padding-bottom: 0;
+  margin-top: 6px;
+  margin-bottom: 2px;
 }

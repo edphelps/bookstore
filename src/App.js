@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { renderToString } from 'react-dom/server'
 import './App.css';
 
 /* ********************************************
@@ -27,14 +28,35 @@ function formatDollars(dollars) {
 }
 
 /* ********************************************
-*  Book row
+*  Book row, unexpanded
 *********************************************** */
 const BookRow = ({ book }) => (
   <div className="list-group-item">
     <div className="row">
-      <div className="col" data-id={book.id}>{book.title}<br />{book.author}</div>
+      <div className="col" data-id={book.id}>
+        <h5>{book.title}</h5>
+        {book.author}
+      </div>
     </div>
   </div>
+);
+
+/* ********************************************
+*  Book row, expanded
+*********************************************** */
+const BookRowExpanded = ({ book }) => (
+    <div className="row">
+      <div className="col" data-id={book.id}>
+        <button type="button">add to cart</button> {formatDollars(book.price)}<br />
+        <h5>{book.title}</h5>
+        <span className="book-list-heading">Subtitle:</span> ( {book.subtitle} )<br />
+        <span className="book-list-heading">Author:</span> {book.author}<br />
+        <span className="book-list-heading">Decription:</span> {book.description}<br />
+        <span className="book-list-heading">Publication:</span> {book.publisher} {book.published}<br />
+        <span className="book-list-heading">Pages:</span> {book.pages} {book.published}<br />
+        <a target="_blank" href={book.website}>website</a><br />
+        </div>
+    </div>
 );
 
 /* ********************************************
@@ -46,21 +68,45 @@ const BookRow = ({ book }) => (
 *********************************************** */
 const BookList = ({books, searchCriteria}) => {
 
+  /* **********************************
+  *  onclickBookList()
+  *  Expands the information on the book and adds a Buy button
+  ************************************* */
   const onclickBookList = (e) => {
     console.log("BookList::onClickBookList(), id: ", e.target.dataset.id);
 
-    // check if user clicked the list heading, do nothing
+    // check if user clicked the list heading or a line, do nothing
     if (!e.target.dataset.id)
       return;
 
-    
+    // find book
+    const book = books.find((book) => book.id == e.target.dataset.id);
+
+    if (!book) {
+      console.log("ERROR couldn't find book: ", e.target.dataset.id);
+      return;
+    }
+    e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
   }
 
+  /* **********************************
+  *  render()
+  ************************************* */
   console.log("BookList::render(), books: ", books);
+
+  // short circuit, still loading
   if (!books) {
     return (
       <div className="container">
-          <h1>Loading...</h1>
+          <h1>Loading book list...</h1>
+      </div>
+  )}
+
+  // short circuit, no books
+  if (!books.length) {
+    return (
+      <div className="container">
+          <h1>You bought the store!</h1>
       </div>
   )}
 
@@ -91,15 +137,11 @@ const BookList = ({books, searchCriteria}) => {
     })
   }
 
+  // render
   return (
     <div className="container" onClick={onclickBookList}>
       <h1>Books!</h1>
       <div className="list-group">
-        <div className="list-group-item">
-          <div className="row">
-            <div className="col"><b>book</b></div>
-          </div>
-        </div>
         { filteredBooks.map(book => <BookRow key={book.id} book={book} />) }
       </div>
     </div>
