@@ -30,36 +30,87 @@ function formatDollars(dollars) {
 /* ********************************************
 *  Book row container, manages clicking on un/expanded book
 *********************************************** */
-const BookRowContainer = ({ book }) => {
+class BookRowContainer extends Component {
+
+  constructor(props) {
+      super(props);
+      this.state = {
+          book: this.props.book,
+      };
+    };
+
+  // state = {
+  //   searchCriteria: {
+  //     text: "",
+  //     authorOrTitle: "author" // "title"
 
   /* **********************************
   *  onclickBook()
   *  Expands the information on the book and adds a Buy button
   ************************************* */
-  const onclickBook = (e) => {
-    console.log("BookRow::onClickBookList(), id: ", book.id);
+  onclickBook = (e) => {
+    console.log("BookRow::onClickBookList(), id: ", this.props.book.id);
     console.log("e.target: ", e.target);
 
-    const sElemId = "book_list_id_"+book.id;
-    if (book.isExpanded) {
-      book.isExpanded = false;
-      document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
+    const sElemId = "book_list_id_"+this.props.book.id;
+    if (this.props.book.isExpanded) {
+      this.props.book.isExpanded = false;
+      document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={this.props.book} />);
     }
     else {
-      book.isExpanded = true;
-      document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+      this.props.book.isExpanded = true;
+      document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={this.props.book} />);
     }
     // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
   }
+
   /* **********************************
   *  render()
   ************************************* */
-  return (
-    <div className="list-group-item" id={"book_list_id_"+book.id}  data-id={book.id} onClick={onclickBook}>
-      <BookRowExpanded book={book} />
-    </div>
+  render() {
+    return (
+      <div className="list-group-item" id={"book_list_id_"+this.props.book.id}  data-id={this.props.book.id} onClick={this.onclickBook}>
+        <BookRow book={this.props.book} />
+      </div>
     )
+  }
+
 };
+
+// /* ********************************************
+// *  Book row container, manages clicking on un/expanded book
+// *********************************************** */
+// const BookRowContainer = ({ book }) => {
+//
+//   /* **********************************
+//   *  onclickBook()
+//   *  Expands the information on the book and adds a Buy button
+//   ************************************* */
+//   const onclickBook = (e) => {
+//     console.log("BookRow::onClickBookList(), id: ", book.id);
+//     console.log("e.target: ", e.target);
+//
+//     const sElemId = "book_list_id_"+book.id;
+//     if (book.isExpanded) {
+//       book.isExpanded = false;
+//       document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
+//     }
+//     else {
+//       book.isExpanded = true;
+//       document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+//     }
+//     // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
+//   }
+//
+//   /* **********************************
+//   *  render()
+//   ************************************* */
+//   return (
+//     <div className="list-group-item" id={"book_list_id_"+book.id}  data-id={book.id} onClick={onclickBook}>
+//       <BookRow book={book} />
+//     </div>
+//     )
+// };
 
 /* ********************************************
 *  Book row, unexpanded
