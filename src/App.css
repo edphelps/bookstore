@@ -2,7 +2,7 @@
 /* the list of books on the left,
    limit size and make it scrolling */
 .list-group{
-  max-height: 2000px;
+  max-height: 400px;
   /* max-height: 300px; */
   margin-bottom: 10px;
   overflow:scroll;
@@ -11,6 +11,17 @@
 
 .expanded {
   background-color: #D5D8DC;
+}
+
+.cart-bkgd {
+  background-color: #FEF5E7  ;
+}
+
+/* book title when nin cart */
+.cart-title {
+  font-size: 14px;
+  margin-top: 2px;
+  margin-bottom: 0;
 }
 
 /* book title when not expanded */

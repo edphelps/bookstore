@@ -166,13 +166,13 @@ const BookList = ({ books, searchCriteria, addToCartCB }) => {
   /* **********************************
   *  render()
   ************************************* */
-  console.log('BookList::render(), books: ', books);
+  console.log('BookList::render()');
 
   // short circuit: still loading
   if (!books) {
     return (
       <div className="container">
-        <h1>Loading book list...</h1>
+        <h3>Loading book list...</h3>
       </div>
     );
   }
@@ -192,33 +192,142 @@ const BookList = ({ books, searchCriteria, addToCartCB }) => {
           return false;
       }
     });
+  };
 
-    // filter out books already in the cart
-    filteredBooks = filteredBooks.filter(book => !book.inCart);
-
-    // short circuit: no books to display
-    if (!filteredBooks.length) {
-      return (
-        <div className="container">
-          <h2>You bought the store!</h2>
-        </div>
-      );
-    }
-
-    // sort by title
-    filteredBooks.sort((a, b) => {
-      if (a.title < b.title) return -1;
-      if (a.title > b.title) return 1;
-      return 0;
-    });
+  // short circuit: no books match search
+  if (!filteredBooks.length) {
+    return (
+      <div className="container">
+      <h3>No books match the search</h3>
+      </div>
+    );
   }
+
+  // filter out books already in the cart
+  filteredBooks = filteredBooks.filter(book => !book.inCart);
+
+  // short circuit: no books to display
+  if (!filteredBooks.length) {
+    return (
+      <div className="container">
+        <h3>You bought everything!</h3>
+      </div>
+    );
+  }
+
+  // sort by title
+  filteredBooks.sort((a, b) => {
+    if (a.title < b.title) return -1;
+    if (a.title > b.title) return 1;
+    return 0;
+  });
 
   // render
   return (
     <div className="container">
-      <h2>Select a title below</h2>
+      <h3 className="text-center">Select a title to purchase</h3>
       <div className="list-group">
         { filteredBooks.map(book => <BookRowContainer key={book.id} book={book} addToCartCB={addToCartCB} />) }
+      </div>
+    </div>
+  );
+};
+
+/* ********************************************
+*  CartRow
+*********************************************** */
+const CartRow = ({ book, removeFromCartCB }) => {
+  const onclickDelete = () => {
+    console.log('CartRow::onclickDelete()');
+    removeFromCartCB(book.id);
+  }
+  return (
+    <div className="row">
+      <div className="col">
+        <i className="fas fa-trash-alt" onClick={onclickDelete} />&nbsp;
+        <span className="">{book.title}</span>
+        &nbsp;
+        {formatDollars(book.price)}
+      </div>
+    </div>
+  );
+};
+
+/* ********************************************
+*  CartTotal
+*********************************************** */
+const CartTotal = ({ books }) => {
+  console.log("-- CartTotal::render()");
+  const grandTotal = books.reduce((total, book) => {
+    return total += (book.inCart) ? book.price : 0;
+  }, 0);
+  return (
+    <div className="row">
+      <div className="col">
+        <span className="book-list-heading">Cart Total:</span>&nbsp;
+        {formatDollars(grandTotal)}
+      </div>
+    </div>
+  );
+};
+
+/* ********************************************
+*  Cart
+   Displays books in the cart
+   books -- see App state
+}
+*********************************************** */
+const Cart = ({ books, removeFromCartCB }) => {
+
+  /* **********************************
+  *  render()
+  ************************************* */
+  console.log('Cart::render()');
+
+  // short circuit: still loading
+  if (!books) {
+    return (
+      <div className="container">
+        <h3>Loading cart...</h3>
+      </div>
+    );
+  }
+
+  let filteredBooks = [...books];
+
+  // filter for book in the cart
+  filteredBooks = filteredBooks.filter(book => book.inCart);
+
+  // short circuit: no books to display in cart
+  if (!filteredBooks.length) {
+    return (
+      <div className="container">
+        <h2>Buy something!!!</h2>
+      </div>
+    );
+  }
+
+  // sort by title
+  filteredBooks.sort((a, b) => {
+    if (a.title < b.title) return -1;
+    if (a.title > b.title) return 1;
+    return 0;
+  });
+
+  // render
+  return (
+    <div className="container">
+      <h3 className="text-center"><i className="fas fa-shopping-cart" /> Cart</h3>
+      <CartTotal books={books} />
+      <div className="list-group">
+        { filteredBooks.map(book => (
+          <CartRow
+            key={book.id}
+            book={book}
+            removeFromCartCB={removeFromCartCB}
+          />
+        ))
+        }
       </div>
     </div>
   );
@@ -305,6 +414,7 @@ const SearchBar = ({ searchCriteria, onChangeCB }) => {
 *
 **************************************************** */
 class App extends Component {
+
   state = {
     searchCriteria: {
       text: '',
@@ -370,6 +480,26 @@ class App extends Component {
   }
 
   /* **********************************
+  *  removeFromCart()
+  *  Called when user clicks to remove a book from the cart
+  *  id -- book id
+  ************************************* */
+  removeFromCart = async (id) => {
+    console.log('App:addToCart()');
+    const response = await fetch(`http://localhost:8082/api/books/cart/remove/${id}`, {
+      method: 'PATCH',
+      body: '',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    const json = await response.json();
+    console.log('resulting json: ' + json);
+    this.loadBooks();
+  }
+
+  /* **********************************
   *  loadBooks()
   *  Load books from the api and setState()
   ************************************* */
@@ -391,8 +521,20 @@ class App extends Component {
     return (
       <div>
         <Nav />
+
         <SearchBar searchCriteria={searchCriteria} onChangeCB={this.searchCriteriaChanged} />
-        <BookList books={books} searchCriteria={searchCriteria} addToCartCB={this.addToCart} />
+
+        <div className="row mt-4">
+
+          <div className="col-8">
+            <BookList books={books} searchCriteria={searchCriteria} addToCartCB={this.addToCart} />
+          </div>
+
+          <div className="col-4 pt-3 cart-bkgd">
+            <Cart books={books} removeFromCartCB={this.removeFromCart} />
+          </div>
+
+        </div>
         <Foot />
       </div>
     );
