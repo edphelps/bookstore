@@ -39,7 +39,14 @@ const BookRow = ({ book }) => {
   const onclickBook = (e) => {
     console.log("BookRow::onClickBookList(), id: ", e.target.dataset.id);
     const sElemId = "book_list_id_"+book.id;
-    document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+    if (book.isExpanded) {
+      book.isExpanded = false;
+      document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
+    }
+    else {
+      book.isExpanded = true;
+      document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
+    }
     // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
   }
 
