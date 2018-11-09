@@ -263,7 +263,7 @@ const CartTotal = ({ books }) => {
   }, 0);
   return (
     <div className="row">
-      <div className="col">
+      <div className="col mt-2 mb-2 text-center">
         <span className="book-list-heading">Cart Total:</span>&nbsp;
         {formatDollars(grandTotal)}
       </div>
@@ -526,7 +526,7 @@ class App extends Component {
 
         <div className="row mt-4">
 
-          <div className="col-8">
+          <div className="col-8 pt-3 ">
             <BookList books={books} searchCriteria={searchCriteria} addToCartCB={this.addToCart} />
           </div>
 
