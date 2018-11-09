@@ -68,7 +68,7 @@ const BookRow = ({ book }) => {
 const BookRowExpanded = ({ book }) => (
     <div className="row">
       <div className="col" data-id={book.id}>
-        <div className="book-title">{book.title}</div>
+        <div className="expanded-title">{book.title}</div>
         <div className="expanded-para"><button type="button">add to cart</button> {formatDollars(book.price)}</div>
         <div className="expanded-para"><span className="book-list-heading">Subtitle:</span>{book.subtitle}</div>
         <div className="expanded-para"><span className="book-list-heading">Author:</span> {book.author}</div>
