@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { renderToString } from 'react-dom/server'
 import './App.css';
 
 /* ********************************************
@@ -27,90 +26,6 @@ function formatDollars(dollars) {
   return `$${dollars}.00`;
 }
 
-/* ********************************************
-*  Book row container, manages clicking on un/expanded book
-*********************************************** */
-class BookRowContainer extends Component {
-
-  constructor(props) {
-      super(props);
-      this.state = {
-          book: this.props.book,
-      };
-    };
-
-  // state = {
-  //   searchCriteria: {
-  //     text: "",
-  //     authorOrTitle: "author" // "title"
-
-  /* **********************************
-  *  onclickBook()
-  *  Expands the information on the book and adds a Buy button
-  ************************************* */
-  onclickBook = (e) => {
-    console.log("BookRow::onClickBookList(), id: ", this.props.book.id);
-    console.log("e.target: ", e.target);
-
-    const sElemId = "book_list_id_"+this.props.book.id;
-    if (this.props.book.isExpanded) {
-      this.props.book.isExpanded = false;
-      document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={this.props.book} />);
-    }
-    else {
-      this.props.book.isExpanded = true;
-      document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={this.props.book} />);
-    }
-    // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
-  }
-
-  /* **********************************
-  *  render()
-  ************************************* */
-  render() {
-    return (
-      <div className="list-group-item" id={"book_list_id_"+this.props.book.id}  data-id={this.props.book.id} onClick={this.onclickBook}>
-        <BookRow book={this.props.book} />
-      </div>
-    )
-  }
-
-};
-
-// /* ********************************************
-// *  Book row container, manages clicking on un/expanded book
-// *********************************************** */
-// const BookRowContainer = ({ book }) => {
-//
-//   /* **********************************
-//   *  onclickBook()
-//   *  Expands the information on the book and adds a Buy button
-//   ************************************* */
-//   const onclickBook = (e) => {
-//     console.log("BookRow::onClickBookList(), id: ", book.id);
-//     console.log("e.target: ", e.target);
-//
-//     const sElemId = "book_list_id_"+book.id;
-//     if (book.isExpanded) {
-//       book.isExpanded = false;
-//       document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
-//     }
-//     else {
-//       book.isExpanded = true;
-//       document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
-//     }
-//     // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
-//   }
-//
-//   /* **********************************
-//   *  render()
-//   ************************************* */
-//   return (
-//     <div className="list-group-item" id={"book_list_id_"+book.id}  data-id={book.id} onClick={onclickBook}>
-//       <BookRow book={book} />
-//     </div>
-//     )
-// };
 
 /* ********************************************
 *  Book row, unexpanded
@@ -133,49 +48,118 @@ const BookRowExpanded = ({ book }) => {
   *  onclickAddToCart()
   ************************************* */
   const onclickAddToCart = (e) => {
-    console.log("---- BookRowExpanded::onclickAddToCart()");
-    // console.log("BookRowExpanded::onclickAddToCart(), id: ", e.target.dataset.id);
-    // const sElemId = "book_list_id_"+book.id;
-    // if (book.isExpanded) {
-    //   book.isExpanded = false;
-    //   document.getElementById(sElemId).innerHTML = renderToString(<BookRow book={book} />);
-    // }
-    // else {
-    //   book.isExpanded = true;
-    //   document.getElementById(sElemId).innerHTML = renderToString(<BookRowExpanded book={book} />);
-    // }
-    // e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
-  }
+    console.log('---- BookRowExpanded::onclickAddToCart()');
+    e.stopPropagation();
+  };
 
+  /* **********************************
+  *  render()
+  ************************************* */
   return (
     <div className="row">
       <div className="col expanded" data-id={book.id}>
         <div className="expanded-title">{book.title}</div>
         <div className="expanded-para">
-          <button className="btn btn-success btn-sm"
+          <button
+            className="btn btn-success btn-sm"
             onClick={onclickAddToCart}
-            type="button">
-            <i className="fas fa-cart-plus"></i>&nbsp;
-            add to cart
-           </button>&nbsp;
+            type="button"
+          >
+            <i className="fas fa-cart-plus" />
+            &nbsp;add to cart
+          </button>
+           &nbsp;
           {formatDollars(book.price)}
         </div>
-        <div className="expanded-para"><span className="book-list-heading">Author:</span> {book.author}</div>
-        <div className="expanded-para"><span className="book-list-heading">Subtitle:</span> {book.subtitle}</div>
-        <div className="expanded-para"><span className="book-list-heading">Decription:</span> {book.description}</div>
+        <div className="expanded-para">
+          <span className="book-list-heading">Author:</span>
+          &nbsp;
+          {book.author}
+        </div>
+        <div className="expanded-para">
+          <span className="book-list-heading">Subtitle:</span>
+          &nbsp;
+          {book.subtitle}
+        </div>
+        <div className="expanded-para">
+          <span className="book-list-heading">Decription:</span>
+          &nbsp;
+          {book.description}
+        </div>
         <div className="expanded-para">
           <span className="book-list-heading">
             Publication:
-          </span>&nbsp;
-          {new Date(book.published).toLocaleString('en-US',{ year: '2-digit', month: '2-digit', day: '2-digit' })},&nbsp;
-          {book.pages} pages,&nbsp;
+          </span>
+          &nbsp;
+          {new Date(book.published).toLocaleString('en-US', { year: '2-digit', month: '2-digit', day: '2-digit' })}
+          ,&nbsp;
+          {book.pages}
+          &nbsp;pages,&nbsp;
           {book.publisher}
-          </div>
-        <div className="expanded-para"><a target="_blank" href={book.website}>website</a></div>
         </div>
+        <div className="expanded-para"><a target="_blank" href={book.website}>website</a></div>
+      </div>
     </div>
   );
 };
+
+/* ********************************************
+*  BookRowContainer,
+*  Manages clicking on un/expanded book tpo un/expand.
+*  Stateful with a copy of the book being displayed so it can
+*  add an IsExpanded property.
+*********************************************** */
+class BookRowContainer extends Component {
+  /* **********************************
+  *  constructor
+  ************************************* */
+  constructor(props) {
+    super(props);
+    const { book } = this.props;
+    this.state = {
+      book,
+    };
+  }
+
+  /* **********************************
+  *  onclickBook()
+  *  Expands/Contract the book row
+  ************************************* */
+  onclickBook = () => {
+    console.log('BookRow::onClickBookList(), id: ', this.props.book.id);
+
+    this.setState(() => {
+      const newBook = {...this.state.book};
+      newBook.isExpanded = (!newBook.isExpanded);
+      return {
+        book: newBook,
+      };
+    });
+  }
+
+  /* **********************************
+  *  render()
+  ************************************* */
+  render() {
+    console.log('BookRowContainer::render()');
+    const isExpanded = (this.state.book.isExpanded) ? true : false;
+    if (isExpanded) {
+      return (
+        <div className="list-group-item" id={"book_list_id_"+this.props.book.id}  data-id={this.props.book.id} onClick={this.onclickBook}>
+          <BookRowExpanded book={this.props.book} />
+        </div>
+      )
+    } else {
+      return (
+        <div className="list-group-item" id={"book_list_id_"+this.props.book.id}  data-id={this.props.book.id} onClick={this.onclickBook}>
+          <BookRow book={this.props.book} />
+        </div>
+      )
+    }
+  }
+
+};
+
 
 /* ********************************************
 *  BookList
@@ -191,7 +175,7 @@ const BookList = ({books, searchCriteria}) => {
   ************************************* */
   console.log("BookList::render(), books: ", books);
 
-  // short circuit, still loading
+  // short circuit: still loading
   if (!books) {
     return (
       <div className="container">
@@ -199,7 +183,7 @@ const BookList = ({books, searchCriteria}) => {
       </div>
   )}
 
-  // short circuit, no books
+  // short circuit: no books
   if (!books.length) {
     return (
       <div className="container">
@@ -221,7 +205,6 @@ const BookList = ({books, searchCriteria}) => {
         return false;
       }
     });
-    console.log("-- books: ", filteredBooks);
 
     // filter out books already in the cart
     filteredBooks = filteredBooks.filter((book) => !book.inCart )
@@ -378,14 +361,13 @@ class App extends Component {
   async loadBooks() {
     console.log("App:loadBooks()");
     const response = await fetch('http://localhost:8082/api/books');
-    // console.log("response: ", response);
     const json = await response.json();
     this.setState({books: json});
-    // console.log("books: ", json);
   }
 
   /* **********************************
   *  componentDidMount()
+  *  load the books and get rendering
   ************************************* */
   async componentDidMount() {
     console.log("App:componentDidMount()");
