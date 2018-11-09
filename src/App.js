@@ -30,16 +30,28 @@ function formatDollars(dollars) {
 /* ********************************************
 *  Book row, unexpanded
 *********************************************** */
-const BookRow = ({ book }) => (
-  <div className="list-group-item">
-    <div className="row">
-      <div className="col" data-id={book.id}>
-        <h5>{book.title}</h5>
-        {book.author}
+const BookRow = ({ book }) => {
+
+  /* **********************************
+  *  onclickBookList()
+  *  Expands the information on the book and adds a Buy button
+  ************************************* */
+  const onclickBookList = (e) => {
+    console.log("BookRow::onClickBookList(), id: ", e.target.dataset.id);
+    e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
+  }
+
+  return (
+    <div className="list-group-item" data-id={book.id} onClick={onclickBookList}>
+      <div className="row">
+        <div className="col">
+          <div className="book-title">{book.title}</div>
+          {book.author}
+        </div>
       </div>
     </div>
-  </div>
-);
+    )
+};
 
 /* ********************************************
 *  Book row, expanded
@@ -48,7 +60,7 @@ const BookRowExpanded = ({ book }) => (
     <div className="row">
       <div className="col" data-id={book.id}>
         <button type="button">add to cart</button> {formatDollars(book.price)}<br />
-        <h5>{book.title}</h5>
+        <div className="book-title">{book.title}</div>
         <span className="book-list-heading">Subtitle:</span> ( {book.subtitle} )<br />
         <span className="book-list-heading">Author:</span> {book.author}<br />
         <span className="book-list-heading">Decription:</span> {book.description}<br />
@@ -68,26 +80,26 @@ const BookRowExpanded = ({ book }) => (
 *********************************************** */
 const BookList = ({books, searchCriteria}) => {
 
-  /* **********************************
-  *  onclickBookList()
-  *  Expands the information on the book and adds a Buy button
-  ************************************* */
-  const onclickBookList = (e) => {
-    console.log("BookList::onClickBookList(), id: ", e.target.dataset.id);
-
-    // check if user clicked the list heading or a line, do nothing
-    if (!e.target.dataset.id)
-      return;
-
-    // find book
-    const book = books.find((book) => book.id == e.target.dataset.id);
-
-    if (!book) {
-      console.log("ERROR couldn't find book: ", e.target.dataset.id);
-      return;
-    }
-    e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
-  }
+  // /* **********************************
+  // *  onclickBookList()
+  // *  Expands the information on the book and adds a Buy button
+  // ************************************* */
+  // const onclickBookList = (e) => {
+  //   console.log("BookList::onClickBookList(), id: ", e.target.dataset.id);
+  //
+  //   // check if user clicked the list heading or a line, do nothing
+  //   if (!e.target.dataset.id)
+  //     return;
+  //
+  //   // find book
+  //   const book = books.find((book) => book.id == e.target.dataset.id);
+  //
+  //   if (!book) {
+  //     console.log("ERROR couldn't find book: ", e.target.dataset.id);
+  //     return;
+  //   }
+  //   e.target.innerHTML = renderToString(<BookRowExpanded book={book} />);
+  // }
 
   /* **********************************
   *  render()
@@ -138,8 +150,9 @@ const BookList = ({books, searchCriteria}) => {
   }
 
   // render
+  // {/*<div className="container" onClick={onclickBookList}>*/}
   return (
-    <div className="container" onClick={onclickBookList}>
+    <div className="container">
       <h1>Books!</h1>
       <div className="list-group">
         { filteredBooks.map(book => <BookRow key={book.id} book={book} />) }
