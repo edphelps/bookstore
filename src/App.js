@@ -20,6 +20,88 @@ const Foot = () => (
 );
 
 /* ********************************************
+*  Format 5 to $5.00
+*********************************************** */
+function formatDollars(dollars) {
+  return `$${dollars}.00`;
+}
+
+/* ********************************************
+*  Book row
+*********************************************** */
+const BookRow = ({ book }) => (
+  <div className="list-group-item">
+    <div className="row">
+      <div className="col-2">
+        {formatDollars(book.price)}
+      </div>
+      <div className="col">{book.title}<br />{book.author}</div>
+    </div>
+  </div>
+);
+
+
+/* ********************************************
+*  BookList
+   Displays list of books that match the search criteria and aren't in cart
+   books -- see App state
+   searchCriteria -- see App state
+}
+*********************************************** */
+const BookList = ({books, searchCriteria}) => {
+  console.log("BookList::render(), books: ", books);
+  if (!books) {
+    return (
+      <div className="container">
+          <h1>Loading...</h1>
+      </div>
+  )}
+
+  let filteredBooks = [...books];
+
+  // Apply search criteria
+  if (searchCriteria) {
+    filteredBooks = filteredBooks.filter((book) => {
+      if (searchCriteria.authorOrTitle==="author") {
+        return book.author.toLowerCase().startsWith(searchCriteria.text.toLowerCase());
+      } else if (searchCriteria.authorOrTitle==="title") {
+        return book.title.toLowerCase().startsWith(searchCriteria.text.toLowerCase());
+      } else {
+        console.log("ERROR: bad searchCriteria.authorOrTitle: ", searchCriteria.authorOrTitle);
+        return false;
+      }
+    });
+    console.log("-- books: ", filteredBooks);
+
+    // filter out books already in the cart
+    filteredBooks = filteredBooks.filter((book) => !book.inCart )
+
+    // sort by title
+    filteredBooks.sort((a, b) => {
+      if (a.title < b.title) return -1;
+      if (a.title > b.title) return 1;
+      return 0;
+    })
+  }
+
+  return (
+    <div className="container">
+      <h1>Books!</h1>
+      <div className="list-group">
+        <div className="list-group-item">
+          <div className="row">
+            <div className="col-2"><b>cart</b></div>
+            <div className="col"><b>book</b></div>
+          </div>
+        </div>
+        { filteredBooks.map(book => <BookRow key={book.id} book={book} />) }
+      </div>
+    </div>
+  )
+
+}
+
+/* ********************************************
 *  SearchBar
    Displays search bar at top and notifies parent of any change
      searchState -- {
@@ -38,7 +120,7 @@ const SearchBar = ({searchCriteria, onChangeCB}) => {
     // console.log("search for: ", document.forms.searchForm.searchText.value);
     // console.log("search in: ", document.forms.searchForm.searchRBtns.value);
     onChangeCB({
-      text: document.forms.searchForm.searchText.value,
+      text: document.forms.searchForm.searchText.value.trim(),
       authorOrTitle: document.forms.searchForm.searchRBtns.value,
     });
     // e.preventDefault();
@@ -115,11 +197,29 @@ class App extends Component {
 
   state = {
     searchCriteria: {
-      text: "ed phelps",
-      authorOrTitle: "author"
+      text: "",
+      authorOrTitle: "author" // "title"
     },
+    // books: [ {
+    //     "author": "Glenn Block, et al.",
+    //     "description": "Design and build Web APIs for a broad range of clients—including browsers and mobile devices—that can adapt to change over time. This practical, hands-on guide takes you through the theory and tools you need to build evolvable HTTP services with Microsoft’s ASP.NET Web API framework. In the process, you’ll learn how design and implement a real-world Web API.",
+    //     "id": 8,
+    //     "inCart": true,
+    //     "pages": 538,
+    //     "price": 5,
+    //     "published": "2014-04-07T00:00:00.000Z",
+    //     "publisher": "O'Reilly Media",
+    //     "subtitle": "Harnessing the Power of the Web",
+    //     "title": "Designing Evolvable Web APIs with ASP.NET",
+    //     "website": "http://chimera.labs.oreilly.com/books/1234000001708/index.html"
+    //   },
+    //   {...} ]
   }
 
+  /* **********************************
+  *  Callback when the search bar state has changed
+  *  searchCriteria -- { text: "Tolstoy", authorOrTitle: "author"}
+  ************************************* */
   searchCriteriaChanged = (searchCriteria) => {
     this.setState((prevState) => ({
       searchCriteria: searchCriteria,
@@ -128,14 +228,38 @@ class App extends Component {
     // console.log("App:searchCriteriaChanged(): ",this.state.searchCriteria);
   }
 
+  /* **********************************
+  *  loadBooks()
+  *  Load books from the api and setState()
+  ************************************* */
+  async loadBooks() {
+    console.log("App:loadBooks()");
+    const response = await fetch('http://localhost:8082/api/books');
+    // console.log("response: ", response);
+    const json = await response.json();
+    this.setState({books: json});
+    // console.log("books: ", json);
+  }
+
+  /* **********************************
+  *  componentDidMount()
+  ************************************* */
+  async componentDidMount() {
+    console.log("App:componentDidMount()");
+    this.loadBooks();
+  }
+
+  /* **********************************
+  *  render()
+  ************************************* */
   render() {
     console.log("App:render()");
-    const { searchCriteria } = this.state;
+    const { books, searchCriteria } = this.state;
     return (
       <div>
         <Nav />
         <SearchBar searchCriteria={searchCriteria} onChangeCB={this.searchCriteriaChanged} />
-        <p>content</p>
+        <BookList books={books} searchCriteria={searchCriteria} />
         <Foot />
       </div>
     );
