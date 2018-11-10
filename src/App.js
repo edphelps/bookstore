@@ -243,7 +243,7 @@ const CartRow = ({ book, removeFromCartCB }) => {
   }
   return (
     <div className="row">
-      <div className="col">
+      <div className="col cart-row">
         <i className="fas fa-trash-alt" onClick={onclickDelete} />&nbsp;
         <span className="">{book.title}</span>
         &nbsp;
