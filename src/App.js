@@ -15,7 +15,7 @@ const Nav = () => (
 *********************************************** */
 const Foot = () => (
   <nav className="navbar navbar-dark bg-dark">
-    xx
+    Copyright 2018
   </nav>
 );
 
@@ -60,7 +60,10 @@ const BookRowExpanded = ({ book, addToCartCB }) => {
       <div className="col expanded" data-id={book.id}>
         <div className="expanded-title">{book.title}</div>
         <div className="expanded-para">
-          <button className="btn btn-success btn-sm" onClick={onclickAddToCart} type="button">
+          <button className="btn btn-success btn-sm"
+            onClick={onclickAddToCart}
+            type="button"
+          >
             <i className="fas fa-cart-plus" />
             &nbsp;add to cart
           </button>
@@ -117,7 +120,7 @@ class BookRowContainer extends Component {
 
   /* **********************************
   *  onclick()
-  *  Expands/Contract the book row
+  *  Expands/Contracts the book row
   ************************************* */
   onclick = () => {
     console.log('BookRowContainer::onclick(), id: ', this.props.book.id);
@@ -407,7 +410,7 @@ class App extends Component {
     // ----------------
     // Data structure
     // ----------------
-    // The following is loaded in compomnentDidMount
+    // The following is loaded in componentDidMount
     // books: [ {
     //     "author": "Glenn Block, et al.",
     //     "description": "Design and build Web APIs for a broad ....",

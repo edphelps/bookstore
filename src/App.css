@@ -3,21 +3,22 @@
    limit size and make it scrolling */
 .list-group{
   max-height: 400px;
-  /* max-height: 300px; */
   margin-bottom: 10px;
   overflow:scroll;
   -webkit-overflow-scrolling: touch;
 }
 
+/* style when book details are expanded */
 .expanded {
   background-color: #D5D8DC;
 }
 
+/* background of the cart portion of screen */
 .cart-bkgd {
   background-color: #FEF5E7  ;
 }
 
-/* book title when nin cart */
+/* book title when in cart */
 .cart-title {
   font-size: 14px;
   margin-top: 2px;
@@ -38,7 +39,7 @@
   margin-bottom: 4px;
 }
 
-/* para in expanded section */
+/* paragraph in expanded section */
 .expanded-para {
   margin-top: 4px;
 }
@@ -48,7 +49,7 @@
   margin-top: 10px;
 }
 
-/* leadin headings for expamded book */
+/* leadin headings for expanded book */
 .book-list-heading {
   font-weight: bold;
 }
