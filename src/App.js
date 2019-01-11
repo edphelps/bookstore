@@ -387,22 +387,6 @@ const SearchBar = ({ searchCriteria, onChangeCB }) => {
               </label>
             </div>
 
-            {/* WHY CAN'T I CAPTURE THE ONLCICK? */}
-            {/* <div className="btn-group btn-group-toggle" data-toggle="buttons">
-              <label className="btn btn-info btn-sm active">
-                <input type="radio" onClick={onChange} name="searchRBtns" id="authorRBtn" value="author" autoComplete="off" checked />
-                author
-              </label>
-              <label className="btn btn-info btn-sm">
-                <input type="radio" onClick={onChange} name="searchRBtns" id="titleRBtn" value="title" autoComplete="off" />
-                title
-              </label>
-              <label className="btn btn-info btn-sm">
-                <input type="radio" onClick={onChange} name="searchRBtns" id="descRBtn" value="description" autoComplete="off" />
-                description
-              </label>
-            </div> */}
-
           </div>
         </form>
       </div>
@@ -421,7 +405,7 @@ class App extends Component {
       authorOrTitle: 'author', // "title"
     },
     // ----------------
-    // DON'T DELETE!!!!
+    // Data structure
     // ----------------
     // The following is loaded in compomnentDidMount
     // books: [ {
