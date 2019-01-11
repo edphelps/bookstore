@@ -8,6 +8,8 @@ and place books in a shopping cart with a running total.
 
 Data is pulled from an API through axios calls using async / await.
 
+![Example](screenshots/screen01.png)
+
 <hr>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
