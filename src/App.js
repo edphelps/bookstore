@@ -6,7 +6,6 @@ import SearchBar from './components/SearchBar'
 import BookList from './components/BookList'
 import Cart from './components/Cart'
 
-
 /* *************************************************
 *
 **************************************************** */
