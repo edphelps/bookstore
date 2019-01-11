@@ -3,6 +3,10 @@ import { formatDollars } from '../utils'
 
 /* ********************************************
 *  Book row, expanded
+*  Displays the exanded view of book with button to add to cart
+*
+*  book -- see App state for shape
+*  addToCartCB -- callback if button clicked to add to cart
 *********************************************** */
 const BookRowExpanded = ({ book, addToCartCB }) => {
 

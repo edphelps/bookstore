@@ -3,6 +3,9 @@ import { formatDollars } from '../utils'
 
 /* ********************************************
 *  CartTotal
+*  Calculates and displays the cart total
+*
+*  books -- see App state for shape
 *********************************************** */
 const CartTotal = ({ books }) => {
   console.log("-- CartTotal::render()");

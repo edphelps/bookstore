@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 /* ********************************************
 *  SearchBar
    Displays search bar at top and notifies parent of any change
-     searchState -- see App state
-     onChangeCB -- parent callback when content changes, passing
+     searchCriteria -- see App state for shape
+     onChangeCB -- parent callback when content changes, passing object:
        { text: "xx", authorOrTitle: "author" / "title" }
 }
 *********************************************** */

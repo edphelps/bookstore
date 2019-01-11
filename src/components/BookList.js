@@ -4,9 +4,10 @@ import BookRowContainer from './BookRowContainer'
 /* ********************************************
 *  BookList
    Displays list of books that match the search criteria and aren't in the cart
-   books -- see App state
-   searchCriteria -- see App state
-   addToCartCB -- callback when user clicks to add book to cart, pass the book__id
+
+   books -- see App state for shape
+   searchCriteria -- see App state for shape
+   addToCartCB -- callback when user clicks to add book to cart, pass the book_id
 }
 *********************************************** */
 const BookList = ({ books, searchCriteria, addToCartCB }) => {

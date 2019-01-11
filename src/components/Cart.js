@@ -5,8 +5,9 @@ import CartTotal from './CartTotal'
 /* ********************************************
 *  Cart
    Displays books in the cart
-   books -- see App state
-}
+
+   books -- see App state for shape
+   removeFromCartCB -- callback to remove book from cart
 *********************************************** */
 const Cart = ({ books, removeFromCartCB }) => {
 

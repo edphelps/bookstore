@@ -3,6 +3,9 @@ import { formatDollars } from '../utils'
 
 /* ********************************************
 *  CartRow
+*
+*  book -- see App state for shape
+*  removeFromCartCB -- called when removing book from cart
 *********************************************** */
 const CartRow = ({ book, removeFromCartCB }) => {
   const onclickDelete = () => {

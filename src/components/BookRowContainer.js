@@ -4,8 +4,10 @@ import BookRowExpanded from './BookRowExpanded'
 
 /* ********************************************
 *  BookRowContainer,
-*  Manages clicking row to un/expand a book.
+*  Manages clicking row to expand/unexpand a book.
 *  Stateful with a flag if it's expanded or not.
+*
+*  props:  book -- see App state for shape
 *********************************************** */
 class BookRowContainer extends Component {
   /* **********************************
