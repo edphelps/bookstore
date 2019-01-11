@@ -3,8 +3,8 @@
 ## About the application
 
 React-bookstore is a basic React application that simulates a bookstore
-allowing user to view books, book details, search for titles or authors,
-and place books in a shopping cart with a running total.
+allowing user to view books, book details (by clicking a book), search for
+titles or authors, and place books in a shopping cart with a running total.
 
 Data is pulled from an API through axios calls using async / await.
 
