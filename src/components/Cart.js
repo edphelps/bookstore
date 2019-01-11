@@ -1,43 +1,6 @@
 import React, { Component } from 'react';
-import { formatDollars } from '../utils'
-
-/* ********************************************
-*  CartRow
-*********************************************** */
-const CartRow = ({ book, removeFromCartCB }) => {
-  const onclickDelete = () => {
-    console.log('CartRow::onclickDelete()');
-    removeFromCartCB(book.id);
-  }
-  return (
-    <div className="row">
-      <div className="col cart-row">
-        <i className="fas fa-trash-alt" onClick={onclickDelete} />&nbsp;
-        <span className="">{book.title}</span>
-        &nbsp;
-        {formatDollars(book.price)}
-      </div>
-    </div>
-  );
-};
-
-/* ********************************************
-*  CartTotal
-*********************************************** */
-const CartTotal = ({ books }) => {
-  console.log("-- CartTotal::render()");
-  const grandTotal = books.reduce((total, book) => {
-    return total += (book.inCart) ? book.price : 0;
-  }, 0);
-  return (
-    <div className="row">
-      <div className="col mt-2 mb-2 text-center">
-        <span className="book-list-heading">Cart Total:</span>&nbsp;
-        {formatDollars(grandTotal)}
-      </div>
-    </div>
-  );
-};
+import CartRow from './CartRow'
+import CartTotal from './CartTotal'
 
 /* ********************************************
 *  Cart
@@ -100,6 +63,5 @@ const Cart = ({ books, removeFromCartCB }) => {
     </div>
   );
 };
-
 
 export default Cart
