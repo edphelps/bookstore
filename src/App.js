@@ -1,23 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import Nav from './components/Nav'
+import Foot from './components/Foot'
 
-/* ********************************************
-*  Nav bar
-*********************************************** */
-const Nav = () => (
-  <nav className="navbar navbar-dark bg-primary">
-    <a className="navbar-brand" href="#">Barnes and Ignoble</a>
-  </nav>
-);
-
-/* ********************************************
-*  Footer
-*********************************************** */
-const Foot = () => (
-  <nav className="navbar navbar-dark bg-dark">
-    Copyright 2018
-  </nav>
-);
 
 /* ********************************************
 *  Format 5 to $5.00
